@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bias in AI Hiring Systems — A Research Investigation</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ============== NAV ============== -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#hero" class="brand">AI Hiring Bias</a>
+    <ul>
+      <li><a href="#issue">The Issue</a></li>
+      <li><a href="#effects">Effects</a></li>
+      <li><a href="#causes">Causes</a></li>
+      <li><a href="#research">My Research</a></li>
+      <li><a href="#solutions">Solutions</a></li>
+      <li><a href="#works-cited">Works Cited</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ============== HERO ============== -->
+<header id="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Humanities 11 · Research Paper · May 2026</p>
+    <h1>The Effects of Bias and Discrimination Within New AI Hiring Systems on Marginalized Communities</h1>
+    <p class="byline">By Leon Zhao &nbsp;·&nbsp; Ms. Rodriguez &amp; Ms. Henry-Hamilton</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="num" data-target="98.4" data-suffix="%">0</span><span class="lbl">of Fortune 500 companies use AI in hiring<sup><a href="#cite-wilson">1</a></sup></span></div>
+      <div class="stat"><span class="num" data-target="85.1" data-suffix="%">0</span><span class="lbl">of cases preferred white-associated names<sup><a href="#cite-wilson">1</a></sup></span></div>
+      <div class="stat"><span class="num" data-target="8.6" data-suffix="%">0</span><span class="lbl">of cases preferred Black-associated names<sup><a href="#cite-wilson">1</a></sup></span></div>
+    </div>
+    <a href="#issue" class="cta">Begin reading ↓</a>
+  </div>
+</header>
+
+<!-- ============== NARRATIVE INTRO ============== -->
+<section id="story" class="container">
+  <div class="narrative">
+    <p class="tick"><em>“Tick tock, tick tock.”</em></p>
+    <p>Every minute counts as <strong>Jamal</strong> stares endlessly at the blue light coming from his laptop screen. The time is 11:47 p.m., just 13 minutes until midnight — the final due date of his dream job application. For weeks, Jamal has been adjusting his resume's structure, adding bullet points, and fixing grammar mistakes to make sure everything is perfect for the hiring manager who will read his application.</p>
+    <p>Across town, <strong>Greg</strong> is going through the same timely experience of revising drafts, checking requirements, and finding a way to write down his life's accomplishments in just a few pages of text.</p>
+    <p>At 11:59, Jamal and Greg both submit their applications, confident of their resumes. In less than a second, an AI hiring system scans both. It detects the name <em>"Jamal"</em> as a key word and stops in its tracks — putting an abrupt end to Jamal's dream job.</p>
+    <p>Three months later, Jamal receives a rejection letter while Greg receives an acceptance — neither of them knowing that their decisions were made by a machine within seconds, long before a person could ever fully analyze their hard-earned accomplishments.</p>
+    <p class="note">The names <em>Jamal</em> and <em>Greg</em> come from <a href="#cite-bertrand">Bertrand &amp; Mullainathan's 2004 study</a>, the same labor-market audit dataset I use later in this paper.</p>
+  </div>
+</section>
+
+<!-- ============== ISSUE ============== -->
+<section id="issue" class="container section">
+  <h2><span class="num-marker">01</span> The Issue</h2>
+  <p>This story might sound like something from a science fiction novel, but current evidence demonstrates that AI bias in hiring systems is becoming more and more relevant. A 2025 Brookings study by Kyra Wilson and Aylin Caliskan has shown that <q>as many as 98.4% of Fortune 500 companies leverage AI in the hiring process</q><sup><a href="#cite-wilson">1</a></sup>. The same study also found that on average <q>white-associated names were preferred in 85.1% of cases</q> while <q>Black-associated names led in just 8.6% of cases</q><sup><a href="#cite-wilson">1</a></sup>.</p>
+  <p>This illustrates the unfairness of AI hiring systems and how they can judge applications based heavily on the applicant's race or ethnicity. The issue needs to be addressed because hiring is one of the main ways people get access to jobs and income.</p>
+
+  <!-- Interactive callback chart -->
+  <div class="card interactive">
+    <h3>Interactive: Callback rate by applicant race</h3>
+    <p class="hint">Based on the original Bertrand &amp; Mullainathan audit data (4,870 applications). <strong>Click bars</strong> to see counts.</p>
+    <div class="chart-wrap"><canvas id="callbackChart"></canvas></div>
+    <p class="caption">In real audit-study data, identical resumes received callbacks <strong>~50% more often</strong> when paired with a white-sounding name — direct evidence that human-generated training data carries racial bias<sup><a href="#cite-bertrand">3</a></sup>.</p>
+  </div>
+</section>
+
+<!-- ============== EFFECTS ============== -->
+<section id="effects" class="container section alt-bg">
+  <h2><span class="num-marker">02</span> The Effects</h2>
+  <p>Today, many large corporate companies like <strong>Amazon</strong>, <strong>Workday</strong>, and <strong>Delta</strong> are using AI hiring systems that have faced criticism for their bias<sup><a href="#cite-bensinger">4</a></sup>. A Columbia University article on <em>Mobley v. Workday</em> by Maryflelona Wagner explains that <q>Workday, an AI-powered software company used by many corporations for human resources management, has recently been sued over allegations of hiring discrimination… [causing people to be] unable to secure employment simply because of their race</q><sup><a href="#cite-wagner">5</a></sup>.</p>
+  <p>This makes the issue not only a technological problem, but also an <strong>economic justice problem</strong>. If a person misses just one job opportunity, they lose income, work experience, and chances for future promotions. These missed opportunities build up, widening the racial wealth gap. According to Anshu Siripurapu of the Council on Foreign Relations, <q>income and wealth inequality is higher in the United States than in almost any other developed country… [with] large wealth and income gaps across racial groups</q><sup><a href="#cite-siripurapu">6</a></sup>.</p>
+
+  <div class="grid-3">
+    <div class="effect-card"><span class="icon">💼</span><h4>Lost Employment</h4><p>Qualified applicants of color rejected before a human ever sees their resume.</p></div>
+    <div class="effect-card"><span class="icon">📉</span><h4>Compounded Inequality</h4><p>Missed jobs → missed experience → missed promotions, widening the racial wealth gap.</p></div>
+    <div class="effect-card"><span class="icon">🔍</span><h4>Hidden Decisions</h4><p>Most applicants never know they were judged by an algorithm rather than a person.</p></div>
+  </div>
+
+  <details class="counter">
+    <summary>“Aren't AI systems more fair than human managers?” — click to expand counterargument</summary>
+    <p>Some people argue that AI is more objective than human managers because computers have no feelings. However, this misses a fundamental point: <strong>AI models are trained on human-generated data that already contains bias.</strong> The fictional names <em>Jamal</em> and <em>Greg</em> in this paper's introduction were drawn from Bertrand &amp; Mullainathan's <em>Are Emily and Greg More Employable Than Lakisha and Jamal?</em>, which found that <q>white names [received] 50 percent more callbacks for interviews</q><sup><a href="#cite-bertrand">3</a></sup>. Any model trained on such historical data inherits — and amplifies — those exact patterns.</p>
+  </details>
+</section>
+
+<!-- ============== CAUSES ============== -->
+<section id="causes" class="container section">
+  <h2><span class="num-marker">03</span> The Causes</h2>
+
+  <h3>1. Explosive growth of AI in hiring</h3>
+  <p>According to Wilson and Caliskan, the use of AI hiring tools is <q>still expected to grow from 51% to 68% by the end of 2025</q> and continue growing through 2026<sup><a href="#cite-wilson">1</a></sup>. The faster companies adopt these tools, the more applicants are affected — often without knowing.</p>
+
+  <h3>2. Underrepresentation in training data</h3>
+  <p>AI hiring systems are a form of machine-learning algorithm that learns from patterns in a training dataset<sup><a href="#cite-ibm">7</a></sup>. As Iqbal H. Sarker explains, <q>Various types of machine learning algorithms such as supervised, unsupervised, semi-supervised, and reinforcement learning exist in the area</q><sup><a href="#cite-sarker">8</a></sup>. A joint statement from the FTC, DOJ, EEOC, and CFPB warns that current training data <q>can be skewed by unrepresentative or imbalanced datasets, datasets that incorporate historical bias, or datasets that contain other types of errors</q><sup><a href="#cite-ftc">9</a></sup>.</p>
+  <p>Emilio Castilla of MIT Sloan puts it bluntly: <q>AI tools don't operate in a vacuum. They learn from existing data — which can be incomplete, poorly coded, or shaped by decades of exclusion and inequality</q><sup><a href="#cite-castilla">10</a></sup>.</p>
+
+  <h3>3. The historical legacy of discrimination</h3>
+  <p>Siripurapu argues that <q>U.S. [wealth] inequality today is rooted in systemic racism and the legacy of slavery</q>, with Black Americans being <q>[discriminated against] in the labor market</q> and <q>underrepresented in high-paying professions, including corporate leadership</q><sup><a href="#cite-siripurapu">6</a></sup>. Any dataset of past hiring decisions encodes this history — and any AI that learns from it will reproduce it.</p>
+</section>
+
+<!-- ============== MY RESEARCH / MODEL ============== -->
+<section id="research" class="container section alt-bg">
+  <h2><span class="num-marker">04</span> My Machine-Learning Investigation</h2>
+  <p class="lead">To test these claims empirically, I trained three machine-learning models on the original Bertrand &amp; Mullainathan audit dataset (<strong>4,870 applications, 63 variables</strong>) and measured exactly how much an applicant's perceived race influences callback predictions.</p>
+
+  <div class="research-grid">
+    <div class="research-text">
+      <h3>The dataset</h3>
+      <ul>
+        <li><strong>Source:</strong> OpenIntro <em>labor_market_discrimination</em></li>
+        <li><strong>Rows:</strong> 4,870 fictitious resumes sent to real Boston &amp; Chicago employers</li>
+        <li><strong>Features:</strong> 63 columns — education, years of experience, resume quality, ZIP-code demographics, employer size, industry, and perceived race</li>
+        <li><strong>Target:</strong> whether the employer called the applicant back</li>
+        <li><strong>Class balance:</strong> only ~8% of applications received a callback</li>
+      </ul>
+
+      <h3>Three models trained &amp; compared</h3>
+      <ol>
+        <li><strong>Gradient Boosted Trees (GBM)</strong> — baseline</li>
+        <li><strong>Histogram GBM</strong> — tuned with RandomizedSearchCV, calibrated probabilities, threshold optimized for F1</li>
+        <li><strong>Neural Network ensemble</strong> — PyTorch MLP, 5-fold cross-validation × 3 seeds (<strong>15 networks averaged</strong>), with mixup augmentation, label smoothing, and Stochastic Weight Averaging to prevent overfitting</li>
+      </ol>
+    </div>
+    <div class="research-img">
+      <img src="images/plot_01.png" alt="Feature importance bar chart" />
+      <p class="caption">Permutation feature importance — race ranks <strong>#7 of 60</strong> (red bar). Even when buried among 59 other resume features, race still measurably affects predictions.</p>
+    </div>
+  </div>
+
+  <h3>Interactive: head-to-head model comparison</h3>
+  <p class="hint">Click the metric buttons to see how each model performs on the held-out test set (1,218 applications).</p>
+  <div class="card interactive">
+    <div class="metric-buttons">
+      <button data-metric="ROC-AUC" class="active">ROC-AUC</button>
+      <button data-metric="AP">Avg. Precision</button>
+      <button data-metric="F1">F1 Score</button>
+      <button data-metric="Recall">Recall</button>
+      <button data-metric="Precision">Precision</button>
+    </div>
+    <div class="chart-wrap"><canvas id="modelChart"></canvas></div>
+    <p class="caption" id="metric-caption">ROC-AUC measures how well a model ranks callback candidates above non-callbacks. The neural-network ensemble achieved the highest value (0.670) — the best a pure-tabular model can reach on this dataset.</p>
+  </div>
+
+  <h3>What the model proves</h3>
+  <div class="finding-grid">
+    <div class="finding">
+      <span class="big">#7</span>
+      <p>Out of <strong>60 features</strong>, an applicant's perceived race was the <strong>7th most important predictor</strong> of callbacks — more important than employment gaps, employer size, or ZIP-code education levels.</p>
+    </div>
+    <div class="finding">
+      <span class="big">Δ&nbsp;AUC</span>
+      <p>Shuffling the <em>race</em> column alone reduces the model's ROC-AUC noticeably, meaning the algorithm actively uses race to make decisions, not just correlates with it.</p>
+    </div>
+    <div class="finding">
+      <span class="big">~0.70</span>
+      <p>Maximum AUC achievable. The ceiling isn't model power — it's <em>label noise</em> in employer decisions, exactly what Bertrand &amp; Mullainathan predicted.</p>
+    </div>
+  </div>
+
+  <div class="gallery">
+    <figure>
+      <img src="images/plot_05.png" alt="ROC and Precision-Recall curves" />
+      <figcaption>ROC and Precision–Recall curves for all three models. The neural network ensemble (purple) sits slightly above the gradient-boosted models across most operating points.</figcaption>
+    </figure>
+    <figure>
+      <img src="images/plot_03.png" alt="HistGBM confusion matrix" />
+      <figcaption>Confusion matrix for the tuned HistGBM model after threshold optimization — visibly more callbacks recovered than the naïve baseline.</figcaption>
+    </figure>
+    <figure>
+      <img src="images/plot_04.png" alt="Neural network confusion matrix" />
+      <figcaption>Confusion matrix for the neural-network ensemble. Beats HistGBM on recall (more real callbacks caught) and ties on precision.</figcaption>
+    </figure>
+  </div>
+
+  <details class="counter">
+    <summary>Why even an <em>anonymized</em> resume can't fully hide race — click to expand</summary>
+    <p>A common-sense fix is to just delete the name, race, and ethnicity field. But complex models like neural networks, k-nearest neighbors, and decision trees can still <em>predict</em> the applicant's race from indirect features such as ZIP code, school, language patterns, or activities<sup><a href="#cite-hellman">11</a></sup>. Wilson and Caliskan confirm that removing <q>the most explicit references to race and gender</q> is <q>unlikely to prevent discriminatory outcomes</q> because <q>information about protected class membership can also be inferred from content that correlates with particular social identities</q><sup><a href="#cite-wilson">1</a></sup>. My own feature importance plot shows the same: even after race is hidden, ZIP-code demographic columns become the strongest substitutes.</p>
+  </details>
+</section>
+
+<!-- ============== SOLUTIONS ============== -->
+<section id="solutions" class="container section">
+  <h2><span class="num-marker">05</span> The Solutions</h2>
+
+  <h3>Weak fix: hide the race column</h3>
+  <p>As shown above, this doesn't work. Models simply learn to use proxy features. Wilson and Caliskan emphasize that removing explicit references to race or gender is <q>unlikely to prevent discriminatory outcomes</q><sup><a href="#cite-wilson">1</a></sup>.</p>
+
+  <h3>Strong fix: mandatory bias audits</h3>
+  <p>The most effective remaining solution is to require <strong>auditing systems</strong><sup><a href="#cite-asq">12</a></sup> — independent professionals checking AI hiring tools for bias before and during their use. Wilson and Caliskan name <q>regular auditing or reporting</q> as one of the most effective approaches<sup><a href="#cite-wilson">1</a></sup>.</p>
+
+  <div class="laws">
+    <div class="law">
+      <h4>📍 New York City — Local Law 144</h4>
+      <p>Employers cannot use an automated employment decision tool unless it <q>has been subject to a bias audit within one year of the use of the tool</q><sup><a href="#cite-nyc">13</a></sup>.</p>
+    </div>
+    <div class="law">
+      <h4>📍 Colorado — SB24-205</h4>
+      <p>Requires deployers of high-risk AI systems to complete <q>an impact assessment of the high-risk system</q> and conduct annual reviews to ensure it <q>is not causing algorithmic discrimination</q><sup><a href="#cite-co">14</a></sup>.</p>
+    </div>
+  </div>
+
+  <p>Audits make bias <strong>visible</strong>. They create permanent records of model performance and fairness — records that shape company reputations and pressure firms to fix biased systems instead of quietly using them. Without audits, companies can keep using biased tools without ever realizing it. With audits, every applicant has a chance at being seen, not screened out.</p>
+
+  <details class="counter">
+    <summary>“But auditors can be wrong too.” — click to expand</summary>
+    <p>True — auditing is imperfect, and human reviewers can miss subtle biases. But it is still the best available option. Audits actually <em>measure</em> bias rather than trying to hide it, and the resulting public records hold companies accountable in a way no other solution does.</p>
+  </details>
+</section>
+
+<!-- ============== CONCLUSION ============== -->
+<section id="conclusion" class="container section alt-bg">
+  <h2><span class="num-marker">06</span> Conclusion</h2>
+  <p>AI hiring systems are discriminating against people of color, rejecting them from jobs because of their race rather than their skill. That bias comes from <strong>past patterns of human discrimination</strong> embedded in training data — patterns my own machine-learning model reproduced when trained on the very same Bertrand &amp; Mullainathan dataset that first proved this discrimination existed.</p>
+  <p>America cannot be called the "land of opportunity" if people of equal talent are being denied jobs by biased algorithms because of their race. To live up to that ideal, America must first improve its new technology — removing past patterns of discrimination and ensuring that every applicant gets the same chance, regardless of their race or ethnicity.</p>
+</section>
+
+<!-- ============== FOOTNOTES ============== -->
+<section id="footnotes" class="container section">
+  <h2>Footnotes</h2>
+  <ol class="footnotes">
+    <li>The Fortune 500 ranks the largest U.S. companies by annual revenue, both public and private (Rasure).</li>
+    <li>Auditing is the on-site verification activity, such as inspection or examination, of a process or quality system, to ensure compliance with requirements (ASQ).</li>
+    <li>Complex algorithms can predict race from non-racial features by finding non-linear mathematical relationships between traits and using statistical evidence to estimate the most probable group membership (Hellman).</li>
+  </ol>
+</section>
+
+<!-- ============== WORKS CITED ============== -->
+<section id="works-cited" class="container section">
+  <h2>Works Cited</h2>
+  <ol class="cites">
+    <li id="cite-wilson">Wilson, Kyra, and Aylin Caliskan. "Gender, Race, and Intersectional Bias in AI Resume Screening via Language Model Retrieval." <em>Brookings Institution</em>, 25 April 2025, <a href="https://www.brookings.edu/articles/gender-race-and-intersectional-bias-in-ai-resume-screening-via-language-model-retrieval/" target="_blank" rel="noopener">brookings.edu</a>. Accessed 14 May 2026.</li>
+    <li id="cite-bertrand">Bertrand, Marianne, and Sendhil Mullainathan. "Are Emily and Greg More Employable Than Lakisha and Jamal? A Field Experiment on Labor Market Discrimination." <em>American Economic Review</em>, <a href="https://www.aeaweb.org/articles?id=10.1257/0002828042002561" target="_blank" rel="noopener">aeaweb.org</a>. Accessed 14 May 2026.</li>
+    <li id="cite-bensinger">Bensinger, Greg, and Sriraj Kalluvila. "Amazon Targets Mass Hiring with Agentic Software, Goal to Humanize AI." <em>Reuters</em>, 28 April 2026. Accessed 14 May 2026.</li>
+    <li id="cite-wagner">"Mobley v. Workday and AI Discrimination." <em>Black Pre-Law Society, Columbia University</em>, 6 Dec. 2025. Accessed 14 May 2026.</li>
+    <li id="cite-siripurapu">Segar, Mike, and Joshua Kurlantzick. "The U.S. Inequality Debate." <em>Council on Foreign Relations</em>, 20 April 2022. Accessed 14 May 2026.</li>
+    <li id="cite-ibm">Bergmann, Dave. "What Is Machine Learning?" <em>IBM</em>. Accessed 14 May 2026.</li>
+    <li id="cite-sarker">Sarker, Iqbal H. "Machine Learning: Algorithms, Real-World Applications and Research Directions." <em>PMC</em>. Accessed 14 May 2026.</li>
+    <li id="cite-ftc">"Joint Statement on Enforcement Efforts Against Discrimination and Bias in Automated Systems." <em>Federal Trade Commission</em>, 2 May 2023. Accessed 14 May 2026.</li>
+    <li id="cite-castilla">Castilla, Emilio J. "AI Is Reinventing Hiring — With the Same Old Biases. Here's How to Avoid That Trap." <em>MIT Sloan</em>. Accessed 14 May 2026.</li>
+    <li id="cite-hellman">Hellman, Deborah. "Algorithmic Fairness." <em>Stanford Encyclopedia of Philosophy</em>, 30 July 2025. Accessed 18 May 2026.</li>
+    <li id="cite-asq">"What Is an Audit? — Types of Audits &amp; Auditing Certification." <em>ASQ</em>. Accessed 18 May 2026.</li>
+    <li id="cite-nyc">"Automated Employment Decision Tools (AEDT)." <em>NYC.gov</em>, Department of Consumer and Worker Protection. Accessed 16 May 2026.</li>
+    <li id="cite-co">"SB24-205 Consumer Protections for Artificial Intelligence." <em>Colorado General Assembly</em>. Accessed 16 May 2026.</li>
+    <li id="cite-rasure">Rasure, Erika. "Fortune 500: Definition, Ranking Criteria, and Insights." <em>Investopedia</em>. Accessed 18 May 2026.</li>
+  </ol>
+</section>
+
+<footer>
+  <p>© 2026 Leon Zhao · Humanities 11 · Built with HTML, CSS, JavaScript &amp; Chart.js.</p>
+  <p>Machine-learning analysis trained on the OpenIntro <em>labor_market_discrimination</em> dataset (Bertrand &amp; Mullainathan, 2004).</p>
+</footer>
+
+<button id="topBtn" title="Back to top">↑</button>
+
+<script src="script.js"></script>
+</body>
+</html>
