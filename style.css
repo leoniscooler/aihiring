@@ -122,6 +122,13 @@ sup a { color: #b04a3e; font-weight: bold; text-decoration: none; padding: 0 2px
   transition: transform 0.2s, background 0.2s;
 }
 .cta:hover { background: #c75a4d; transform: translateY(-2px); text-decoration: none; }
+.cta-arrow {
+  width: 14px; height: 14px;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  transition: transform 0.2s;
+}
+.cta:hover .cta-arrow { transform: translateY(2px); }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
@@ -258,10 +265,16 @@ li { margin-bottom: 0.4rem; }
 }
 .effect-card:hover { transform: translateY(-4px); }
 .effect-card .icon {
-  font-size: 2.5rem;
-  display: block;
-  margin-bottom: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: #f0ece3;
+  color: #b04a3e;
+  margin-bottom: 1rem;
 }
+.effect-card .icon svg { width: 28px; height: 28px; }
 
 /* ============= COUNTERARGUMENT ============= */
 .counter {
@@ -357,6 +370,18 @@ li { margin-bottom: 0.4rem; }
   border-left: 4px solid #4a7ba7;
   box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 }
+.law h4 { display: flex; align-items: center; gap: 0.6rem; }
+.law-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  background: #eaf1f8;
+  color: #4a7ba7;
+  flex-shrink: 0;
+}
+.law-marker svg { width: 18px; height: 18px; }
 @media (max-width: 700px) { .laws { grid-template-columns: 1fr; } }
 
 /* ============= WORKS CITED ============= */
@@ -398,14 +423,17 @@ footer p { margin-bottom: 0.4rem; }
   border: none;
   background: #b04a3e;
   color: #fff;
-  font-size: 1.4rem;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   opacity: 0;
   transition: opacity 0.3s, transform 0.2s;
   pointer-events: none;
   z-index: 999;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
+#topBtn svg { width: 22px; height: 22px; }
 #topBtn.visible {
   opacity: 1;
   pointer-events: auto;
