@@ -6,6 +6,9 @@
 <title>Bias in AI Hiring Systems — A Research Investigation</title>
 <link rel="stylesheet" href="style.css" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<script src="us-states-topo.js"></script>
 </head>
 <body>
 
@@ -29,7 +32,7 @@
   <div class="hero-inner">
     <p class="eyebrow">Humanities 11 · Research Paper · May 2026</p>
     <h1>The Effects of Bias and Discrimination Within New AI Hiring Systems on Marginalized Communities</h1>
-    <p class="byline">Leon Zhao &nbsp;·&nbsp</p>
+    <p class="byline">By Leon Zhao &nbsp;·&nbsp; Ms. Rodriguez &amp; Ms. Henry-Hamilton</p>
     <div class="hero-stats">
       <div class="stat"><span class="num" data-target="98.4" data-suffix="%">0</span><span class="lbl">of Fortune 500 companies use AI in hiring<sup><a href="#cite-wilson">1</a></sup></span></div>
       <div class="stat"><span class="num" data-target="85.1" data-suffix="%">0</span><span class="lbl">of cases preferred white-associated names<sup><a href="#cite-wilson">1</a></sup></span></div>
@@ -46,7 +49,7 @@
     <p>Every minute counts as <strong>Jamal</strong> stares endlessly at the blue light coming from his laptop screen. The time is 11:47 p.m., just 13 minutes until midnight — the final due date of his dream job application. For weeks, Jamal has been adjusting his resume's structure, adding bullet points, and fixing grammar mistakes to make sure everything is perfect for the hiring manager who will read over his application. Beside Jamal lie a pile of scattered notes that represent the countless hours he spent on researching, drafting, and revising.</p>
     <p>Across town, <strong>Greg</strong> is going through the same timely experience of revising drafts, checking requirements, and finding a way to write down his life's accomplishments in just a few pages of text. At 11:59, Jamal and Greg submit their applications, feeling confident of their resumes which document the countless hours they spent on classes, internships, and projects.</p>
     <p>In less than a second, an AI hiring system scans both resumes, sensing key words and trends that reflect the data it was trained on. The AI system detects the name <em>"Jamal"</em> as a key word and stops in its tracks, putting an abrupt end to its scanning and an abrupt end to Jamal's dream job and source of income.</p>
-    <p>Three months later, Jamal receives a rejection letter while Greg receives an acceptance letter — neither of them knowing that their decisions were made by a machine within seconds, long before a person could ever fully analyze their hard-earned accomplishments.</p>
+    <p>Three months later, Jamal receives a rejection letter while Greg receives an acceptance letter — neither of them knowing that their decisions were made by a machine within seconds, long before a person could fully analyze their skills and hard-earned accomplishments.</p>
     <p class="note">The names <em>Jamal</em> and <em>Greg</em> come from <a href="#cite-bertrand">Bertrand &amp; Mullainathan's 2004 study</a>, the same labor-market audit dataset I use later in this paper.</p>
   </div>
 </section>
@@ -54,7 +57,7 @@
 <!-- ============== ISSUE ============== -->
 <section id="issue" class="container section">
   <h2><span class="num-marker">01</span> The Issue</h2>
-  <p>This story might sound like something from a science fiction novel, but current evidence demonstrates that the issue of AI bias in hiring systems is becoming more and more relevant. In fact, a 2025 Brookings study conducted by Kyra Wilson and Aylin Caliskan has shown that <q>as many as 98.4% of Fortune 500 companies<sup><a href="#fn-1">[1]</a></sup> leverage AI in the hiring process</q><sup><a href="#cite-wilson">1</a></sup>. The same study also found that on average <q>white-associated names were preferred in 85.1% of cases</q> while <q>black-associated names led in just 8.6% of cases</q><sup><a href="#cite-wilson">1</a></sup>. This illustrates the unfairness of AI hiring systems and how they can judge applications based heavily on the applicant's race or ethnicity. This issue needs to be addressed because hiring is one of the main ways people get access to jobs and income.</p>
+  <p>This story might sound like something from a science fiction novel, but current evidence demonstrates that the issue of AI bias in hiring systems is becoming more and more relevant. In fact, a 2025 Brookings study conducted by Kyra Wilson and Aylin Caliskan has shown that <q>as many as 98.4% of Fortune 500 companies<sup><a href="#fn-1">[1]</a></sup> leverage AI in the hiring process</q><sup><a href="#cite-wilson">1</a></sup>. The same study also found that on average <q>white-associated names were preferred in 85.1% of cases</q> while <q>black-associated names led in just 8.6% of cases</q><sup><a href="#cite-wilson">1</a></sup>. This illustrates the unfairness of AI hiring systems and how they can judge applications by the applicant's race or ethnicity. This issue needs to be addressed because hiring is one of the main ways people get access to jobs and a source of income.</p>
 
   <!-- Interactive callback chart -->
   <div class="card interactive">
@@ -68,9 +71,31 @@
 <!-- ============== EFFECTS ============== -->
 <section id="effects" class="container section alt-bg">
   <h2><span class="num-marker">02</span> The Effects</h2>
-  <p>Today, many large corporate companies like <strong>Amazon</strong>, <strong>Workday</strong>, and <strong>Delta</strong> are using AI hiring systems that have faced criticism for their bias<sup><a href="#cite-bensinger">4</a></sup>. In fact, a Columbia University article about <em>Mobley v. Workday</em> written by Maryflelona Wagner explains that <q>Workday, an AI-powered software company used by many corporations for human resources management, has recently been sued over allegations of hiring discrimination… [causing people to be] unable to secure employment simply because of their race</q><sup><a href="#cite-wagner">5</a></sup>. This makes this issue not only a technological problem, but also an <strong>economic justice problem</strong> as people of color are unable to earn income, build stability, and improve their lives because of their ethnicity.</p>
+  <p>Today, many large corporate companies like <strong>Amazon</strong>, <strong>Workday</strong>, and <strong>Delta</strong> have faced backlash and lawsuits for using biased hiring systems<sup><a href="#cite-bensinger">4</a></sup>. In fact, a Columbia University article about <em>Mobley v. Workday</em> written by Maryflelona Wagner explains that <q>Workday, an AI-powered software company used by many corporations for human resources management, has recently been sued over allegations of hiring discrimination… [causing people to be] unable to secure employment simply because of their race</q><sup><a href="#cite-wagner">5</a></sup>. This makes this issue not only a technological problem, but also an <strong>economic justice problem</strong> as people of color are unable to earn income, build stability, and improve their lives because of their ethnicity.</p>
 
-  <p>If a person misses just one job opportunity, they would lose their income, work experience, and chance for future promotions. These missed opportunities build up over time, making the racial wealth gap even larger. According to Anshu Siripurapu from the Council on Foreign Relations, <q>income and wealth inequality is higher in the United States than in almost any other developed country… [with] large wealth and income gaps across racial groups</q><sup><a href="#cite-siripurapu">6</a></sup>, demonstrating that racial economic inequality already exists and how biased AI hiring systems can further intensify this problem.</p>
+  <p>If a person misses just one job opportunity, they would lose their income, work experience, and chance for future promotions. These missed opportunities can build up over time, making the racial wealth gap seen in America even larger. According to Anshu Siripurapu from the Council on Foreign Relations, <q>income and wealth inequality is higher in the United States than in almost any other developed country… [with] large wealth and income gaps across racial groups</q><sup><a href="#cite-siripurapu">6</a></sup>, demonstrating that racial economic inequality already exists and how biased AI hiring systems are further intensifying this problem.</p>
+
+  <!-- ====== WEALTH GAP FIGURE ====== -->
+  <div class="us-map-sim wealth-fig" data-figure="Figure 1 · U.S. racial wealth gap, 1989–2022">
+    <div class="proxy-head">
+      <h4>Median U.S. family wealth by race, 1989–2022</h4>
+      <p class="proxy-sub">Source: U.S. Federal Reserve, <em>Survey of Consumer Finances</em> (2022 release, dollars adjusted to 2022). Press <strong>Play</strong> to animate the series year by year and watch the gap between white and Black/Hispanic families widen in real time.</p>
+    </div>
+
+    <div class="wealth-controls">
+      <button type="button" id="wealth-play" class="proxy-btn">▶ Play</button>
+      <button type="button" id="wealth-reset" class="proxy-btn proxy-btn-ghost">Reset</button>
+      <input type="range" id="wealth-scrub" min="0" max="11" step="1" value="11" aria-label="Year scrubber" />
+      <div class="wealth-readout">
+        <span class="wr-year" id="wr-year">2022</span>
+        <span class="wr-stat" id="wr-stat">White families hold <strong>6.3×</strong> the wealth of Black families</span>
+      </div>
+    </div>
+
+    <div class="chart-wrap wealth-chart-wrap"><canvas id="wealthChart"></canvas></div>
+
+    <p class="proxy-note">Median values are reported in thousands of 2022 dollars. The 1989–2022 series uses the Federal Reserve’s tri-annual Survey of Consumer Finances; full data are published in Aladangady et al., <em>Changes in U.S. Family Finances from 2019 to 2022</em> (Federal Reserve Bulletin, October 2023). <a href="https://www.federalreserve.gov/publications/files/scf23.pdf" target="_blank" rel="noopener">Read the report</a>.</p>
+  </div>
 
   <div class="grid-3">
     <div class="effect-card">
@@ -98,7 +123,7 @@
 
   <details class="counter">
     <summary>Counterargument: “Aren't AI systems more fair than human managers?” — click to expand</summary>
-    <p>Some people might say that being rejected from a job offer does not entail discrimination because employers are choosing the candidates who have stronger experiences and qualifications. Other people might say that AI hiring systems are more fair than human managers because computers do not have feelings or emotions. However, these arguments do not account for the fact that <strong>AI hiring systems are trained on pre-existing data created by humans that have innate bias.</strong> The names of the characters, Jamal and Greg, seen in the introduction were not chosen by chance; they come from a well-known labor market study conducted by the American Economic Review called <em>Are Emily and Greg More Employable Than Lakisha and Jamal?</em> In this study, Marianne Bertrand and Sendhil Mullainathan analyzed data from past human hiring managers and found that <q>white names [received] 50 percent more callbacks for interviews</q><sup><a href="#cite-bertrand">3</a></sup>, proving that the discrimination of applicants based on their ethnicity has existed before AI hiring systems were introduced. This means that human-collected data in which current AI hiring systems are trained on must contain biases within them, causing the AI model to learn those same patterns and repeat them.</p>
+    <p>Some people might say that AI hiring systems are actually more fair than human managers because computers do not have feelings or emotions. However, these arguments do not account for the fact that <strong>AI hiring systems are trained on pre-existing data created by humans that have innate bias.</strong> The names of the characters, Jamal and Greg, seen in the introduction were not chosen by chance; they come from a well-known labor market study conducted by the American Economic Review called <em>Are Emily and Greg More Employable Than Lakisha and Jamal?</em> In this study, Marianne Bertrand and Sendhil Mullainathan analyzed data from past human hiring managers and found that <q>white names [received] 50 percent more callbacks for interviews</q><sup><a href="#cite-bertrand">3</a></sup>, proving that the discrimination of applicants based on their race has existed well before AI hiring systems were introduced. This means that AI hiring systems are trained on human-made datasets that must contain innate biases within them, resulting in the AI model learning and displaying the same discriminating patterns.</p>
   </details>
 </section>
 
@@ -107,7 +132,7 @@
   <h2><span class="num-marker">03</span> The Causes</h2>
 
   <h3>1. The recent growth of AI in the hiring industry</h3>
-  <p>One main cause of bias within AI hiring systems is the recent growth of AI being used in the hiring industry. According to Wilson and Caliskan, the use of AI hiring tools for average corporations are <q>still expected to grow from 51% to 68% by the end of 2025</q> and continue growing at a similar rate through 2026<sup><a href="#cite-wilson">1</a></sup>. The increasing rate at which companies depend on AI tools to sort and rank applicants can cause more people to be affected by its biases and discriminated against. Furthermore, many applicants to companies using AI hiring systems may not know that they are being judged by an AI. This could cause more and more people of minority groups to be unfairly rejected from a job without a full understanding of why. This demonstrates the increasing severity of this issue and the need for a solution to be implemented as soon as possible.</p>
+  <p>One main cause of bias within AI hiring systems is the recent growth of AI used in the hiring industry. In fact, according to a 2025 Brookings study conducted by Kyra Wilson and Aylin Caliskan, the use of AI hiring tools for average corporations have grown <q>from 51% to 68% by the end of 2025</q> and continue growing at a similar rate through 2026<sup><a href="#cite-wilson">1</a></sup>. The increasing rate at which companies depend on AI tools to sort and rank applicants can cause more people to be affected by its biases and discriminated against. In addition to this, many applicants being evaluated by AI hiring systems may not know they are being judged by an AI. This is causing more and more people of color to be unfairly rejected from a job without a full understanding of why. This demonstrates the increasing severity of this issue and the need for a solution to be implemented as soon as possible.</p>
 
   <h3>2. Underrepresentation of minority groups in training datasets</h3>
   <p>One other source of bias within AI hiring systems is primarily the underrepresentation of minority groups within large training datasets. AI hiring systems are a form of machine learning algorithm that learn from patterns and trends within a training dataset<sup><a href="#cite-ibm">7</a></sup>. Specifically, according to Iqbal H. Sarker from the National Library of Medicine, <q>Various types of machine learning algorithms such as supervised, unsupervised, semi-supervised, and reinforcement learning exist in the area</q><sup><a href="#cite-sarker">8</a></sup>. These algorithms help AI sort and rank applications, but they can also repeat bias if the training data is unfair.</p>
@@ -144,8 +169,14 @@
       </ol>
     </div>
     <div class="research-img">
-      <img src="images/plot_01.png" alt="Feature importance bar chart" />
-      <p class="caption">Permutation feature importance — race ranks <strong>#7 of 60</strong> (red bar). Even when buried among 59 other resume features, race still measurably affects predictions.</p>
+      <div class="chart-wrap zoomable" id="featImpWrap" tabindex="0" role="button" aria-label="Click to enlarge feature importance chart">
+        <canvas id="featImpChart"></canvas>
+        <span class="zoom-hint" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          Click to enlarge
+        </span>
+      </div>
+      <p class="caption">Permutation feature importance — hover any bar for the exact drop in ROC-AUC when that feature is shuffled. Race ranks <strong>#7 of 60</strong> (red bar). Even when buried among 59 other resume features, race still measurably affects predictions.</p>
     </div>
   </div>
 
@@ -206,43 +237,135 @@
 <section id="solutions" class="container section">
   <h2><span class="num-marker">05</span> The Solutions</h2>
 
-  <h3>Weak fix: removing names, race, and ethnicity from applications</h3>
-  <p>One possible solution to bias within AI hiring systems is to remove people's names, race, and ethnicity from applications before inputting them into the AI. While this might seem to solve the issue because the AI cannot see signs of a person's racial identity, many complex machine learning algorithms such as Neural Networks, K-Nearest Neighbors Classifier, and Decision Trees are still able to predict the applicant's race<sup><a href="#cite-hellman">11</a></sup>. A 2025 Brookings study conducted by Kyra Wilson and Aylin Caliskan explains that removing <q>the most explicit references to race and gender</q> is <q>unlikely to prevent discriminatory outcomes</q> because <q>information about protected class membership can also be inferred from content that correlates with particular social identities</q><sup><a href="#cite-wilson">1</a></sup>. The ability for AI models to predict an applicant's race from other details, like their school, personality, writing style, or activities, demonstrates how this issue is more complex than just one word on a resume and needs a stronger solution.</p>
+  <h3>Weak fix: removing race and sources of ethnicity from applications</h3>
+  <p>One possible solution to bias within AI hiring systems is to remove people's race and sources of ethnicity from applications before inputting them into AI systems. While this might seem to solve the issue because the AI cannot see signs of a person's racial identity, many complex machine learning algorithms such as Neural Networks, K-Nearest Neighbors Classifier, and Decision Trees are still able to predict the applicant's race<sup><a href="#cite-hellman">11</a></sup>. A 2025 Brookings study conducted by Kyra Wilson and Aylin Caliskan explains that removing <q>the most explicit references to race and gender</q> is <q>unlikely to prevent discriminatory outcomes</q> because <q>information about protected class membership can also be inferred from content that correlates with particular social identities</q><sup><a href="#cite-wilson">1</a></sup>. The ability for AI models to predict an applicant's race from other details, like their school, personality, writing style, or activities, demonstrates how this issue is more complex than just removing one word on a resume and needs a stronger solution.</p>
 
-  <h3>Strong fix: mandatory bias audits</h3>
-  <p>A stronger solution, and possibly the most effective one, is to require <strong>auditing systems</strong><sup><a href="#cite-asq">12</a></sup> — requiring AI hiring systems to be checked by professionals for signs of bias before real world use. Moreover, according to a 2025 Brookings study conducted by Kyra Wilson and Aylin Caliskan, one of the most effective solutions is to require <q>regular auditing or reporting</q><sup><a href="#cite-wilson">1</a></sup> to check whether hiring systems produce discriminatory results. These forms of auditing systems have already been implemented and have proven to lower the rate of bias within the job market.</p>
+  <!-- ====== Proxy-prediction simulation ====== -->
+  <div class="proxy-sim" aria-label="Proxy prediction simulation">
+    <div class="proxy-head">
+      <h4>Try it yourself: predict race without ever seeing race</h4>
+      <p class="proxy-sub">Imagine a resume with the race field deleted. The AI still sees everything else. Pick four ordinary details below and watch the model guess the applicant's race anyway — that's why removing the race box doesn't fix the problem.</p>
+    </div>
 
-  <div class="laws">
-    <div class="law">
-      <h4><span class="law-marker" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-7.5-7-13a7 7 0 1 1 14 0c0 5.5-7 13-7 13z"/><circle cx="12" cy="8" r="2.5"/></svg></span>New York City — Local Law 144</h4>
-      <p>According to the official NYC page, employers cannot use an automated employment decision tool unless it <q>has been subject to a bias audit within one year of the use of the tool</q><sup><a href="#cite-nyc">13</a></sup>.</p>
+    <div class="proxy-grid">
+      <label>
+        <span>ZIP code area</span>
+        <select id="proxy-zip">
+          <option value="white_sub">Suburban ZIP, 88% White residents</option>
+          <option value="black_urb">Urban ZIP, 71% Black residents</option>
+          <option value="hisp_urb">Urban ZIP, 65% Hispanic residents</option>
+          <option value="asian_sub">Suburban ZIP, 54% Asian residents</option>
+          <option value="mixed">Mixed-demographic ZIP</option>
+        </select>
+      </label>
+
+      <label>
+        <span>College / school</span>
+        <select id="proxy-school">
+          <option value="ivy">Ivy League university</option>
+          <option value="hbcu">Historically Black college (HBCU)</option>
+          <option value="hsi">Hispanic-serving state university</option>
+          <option value="aapi">University with large Asian-American population</option>
+          <option value="state">Generic large state university</option>
+          <option value="cc">Local community college</option>
+        </select>
+      </label>
+
+      <label>
+        <span>First name on resume</span>
+        <select id="proxy-name">
+          <option value="white">Greg / Emily</option>
+          <option value="black">Jamal / Lakisha</option>
+          <option value="hisp">Carlos / Maria</option>
+          <option value="asian">Wei / Priya</option>
+          <option value="neutral">Alex / Jordan (ambiguous)</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Extracurricular listed</span>
+        <select id="proxy-act">
+          <option value="lacrosse">Varsity lacrosse / sailing club</option>
+          <option value="nsbe">National Society of Black Engineers</option>
+          <option value="shpe">Society of Hispanic Professional Engineers</option>
+          <option value="aaa">Asian American Student Association</option>
+          <option value="generic">Debate team (no demographic signal)</option>
+        </select>
+      </label>
     </div>
-    <div class="law">
-      <h4><span class="law-marker" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-7.5-7-13a7 7 0 1 1 14 0c0 5.5-7 13-7 13z"/><circle cx="12" cy="8" r="2.5"/></svg></span>Colorado — SB24-205</h4>
-      <p>According to Colorado's official bill summary, the Colorado state law requires deployers of high-risk AI systems to complete <q>an impact assessment of the high-risk system</q> and to conduct annual reviews to make sure the system <q>is not causing algorithmic discrimination</q><sup><a href="#cite-co">14</a></sup>.</p>
+
+    <div class="proxy-actions">
+      <button type="button" id="proxy-run" class="proxy-btn">Run AI prediction</button>
+      <button type="button" id="proxy-reset" class="proxy-btn proxy-btn-ghost">Reset</button>
     </div>
+
+    <div class="proxy-output" id="proxy-output" aria-live="polite">
+      <p class="proxy-hint">The AI hasn't seen the race field — but every other choice above leaks demographic information. Click <strong>Run AI prediction</strong> to see what the model would guess.</p>
+    </div>
+
+    <p class="proxy-note">Why this matters: even when race is deleted from the application, the model rebuilds a guess from <em>proxies</em> — features that correlate with race. The more accurate that hidden guess, the more the model can reproduce the same biased outcomes it would have without the fix. This is exactly the failure mode Wilson &amp; Caliskan describe.</p>
   </div>
 
-  <p>These laws for auditing help ensure that AI hiring systems are used fairly and treat all applicants the same. This also makes bias within the AI easier to detect and harder to ignore, prompting more change and action to be made towards fixing the AI's algorithm. If audits are not implemented, then companies can continue to use biased AI hiring systems without being aware of the potential negative side effects it can have on marginalized communities. Furthermore, if a company is not aware of this bias, they would not be able to notify applicants applying to the company and fail to inform them of the reason for rejection.</p>
+  <h3>Strong fix: mandatory bias audits</h3>
+  <p>A stronger solution, and possibly the most effective one, is to require <strong>auditing systems</strong><sup><a href="#cite-asq">12</a></sup> — requiring AI hiring systems to be checked by professionals for signs of bias before real world use. Moreover, according to a 2025 Brookings study conducted by Kyra Wilson and Aylin Caliskan, one of the most effective solutions is to require <q>regular auditing or reporting</q> systems<sup><a href="#cite-wilson">1</a></sup> to check whether hiring systems produce discriminatory results. These forms of auditing systems have already been implemented and have proven to lower the rate of bias within the job market. For example, New York City has recently implemented an audit requirement for using AI hiring systems.</p>
 
-  <p>By contrast, if audits are implemented, then companies will have a permanent record of AI performance and bias levels within them. This record can be important because it can shape the company's reputation and accountability, pressuring companies to improve their AI hiring systems and prevent any forms of bias and discrimination.</p>
+  <!-- ====== U.S. AUDIT-LAW MAP ====== -->
+  <div class="us-map-sim" data-figure="Figure 2 · AI hiring law landscape" aria-label="U.S. map of AI hiring audit laws">
+    <div class="proxy-head">
+      <h4>U.S. map: where AI hiring audit laws exist today</h4>
+      <p class="proxy-sub">Drag the year slider (or press Play) to see how state-level AI hiring laws spread from 2020 to 2026. Click any state for the full law summary and source.</p>
+    </div>
+
+    <div class="map-legend">
+      <span class="lgd"><i class="sw cat-comp"></i>Comprehensive AI-employment audit/impact law</span>
+      <span class="lgd"><i class="sw cat-target"></i>Targeted AI hiring rule (specific use case)</span>
+      <span class="lgd"><i class="sw cat-trans"></i>Broad AI transparency law that covers employers</span>
+      <span class="lgd"><i class="sw cat-pend"></i>Active legislation pending</span>
+      <span class="lgd"><i class="sw cat-none"></i>No specific AI hiring law</span>
+    </div>
+
+    <div class="map-timeline">
+      <button type="button" id="map-year-play" class="proxy-btn">&#9654; Play 2020 &rarr; 2026</button>
+      <input type="range" id="map-year-scrub" min="2020" max="2026" step="1" value="2026" aria-label="Map year scrubber" />
+      <div class="map-year-info">
+        <span class="map-year-label">Year</span>
+        <span class="map-year-readout" id="map-year-readout">2026</span>
+        <span class="map-year-counts" id="map-year-counts">&nbsp;</span>
+      </div>
+    </div>
+
+    <div class="us-map-svg-wrap">
+      <svg id="us-map-svg" viewBox="0 0 975 610" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Interactive map of U.S. states colored by AI hiring law status"></svg>
+      <div id="us-map-loading" class="map-loading">Loading U.S. map…</div>
+    </div>
+
+    <div class="map-detail" id="map-detail" aria-live="polite">
+      <p class="proxy-hint">Click a state above to see the law on the books and the official source.</p>
+    </div>
+
+    <p class="proxy-note">Map reflects publicly enacted laws as of May 2026. City-level laws (like New York City's Local Law 144) appear under their state. General anti-discrimination laws that predate AI (e.g., Title VII of the Civil Rights Act) apply nationwide and are not shown here. Sources for each highlighted state are linked in the detail panel.</p>
+  </div>
+
+  <p>These auditing laws help ensure that AI hiring systems are fair and treat all applicants equally. This also makes bias within the AI easier to detect and harder to ignore, prompting more change and action to be made towards fixing the AI's algorithm. If audits are not implemented, then companies can continue to use biased AI hiring systems without being aware of the potential negative side effects it can have on marginalized communities. Furthermore, if a company is not aware of the AI system's bias, they would not be able to notify applicants applying to the company and fail to inform them of the reason for rejection.</p>
+
+  <p>On the other hand, if audits are implemented, then companies will have a permanent record of AI performance and bias levels within them. This record can be important because it can shape the company's reputation and accountability, pressuring companies to improve their AI hiring systems and prevent forms of bias and discrimination.</p>
 
   <details class="counter">
     <summary>Counterargument: “But auditors can be wrong too.” — click to expand</summary>
-    <p>Though auditing contains flaws, such as the professional reviewer's ability to detect biases within AI hiring systems, it is still the best option available. With current technology, auditing allows people to directly measure AI bias and gives companies a public record and reputation for their fairness in which applicants can see before applying. Auditing is more effective than other solutions because, while other methods try to hide data points and potential causes of discrimination, auditing actually establishes if there is bias within the system or not.</p>
+    <p>Though auditing systems can contain flaws, such as the professional reviewer's ability to detect biases within AI hiring systems, it is still the best option available. With current technology, auditing allows people to directly measure AI bias and gives companies a public record and reputation for their fairness in which applicants can see before applying. Auditing is more effective than other solutions because, while other methods try to hide data points and potential causes of discrimination, auditing establishes if there is bias within the system or not.</p>
   </details>
 </section>
 
 <!-- ============== CONCLUSION ============== -->
 <section id="conclusion" class="container section alt-bg">
   <h2><span class="num-marker">06</span> Conclusion</h2>
-  <p>The evidence conveys that AI hiring systems are discriminating against people of color, viewing them negatively and rejecting them from jobs because of their race and ethnicity. The bias within AI hiring systems comes primarily from past patterns of discrimination made by humans. These unfair patterns and innate sources of bias have been captured within underrepresented datasets used to train AI systems, making them output unfair patterns that are hidden within their algorithms. This causes AI hiring systems to reject people because of their race and ethnicity over their skill and capabilities.</p>
+  <p>The evidence conveys that AI hiring systems are discriminating against people of color, viewing them negatively and rejecting them from jobs because of their race and ethnicity. The bias within AI hiring systems comes primarily from patterns of past discrimination made by humans. These unfair patterns and innate sources of bias have been captured within underrepresented datasets used to train AI systems, making them output unfair patterns hidden within their algorithms. This causes AI hiring systems to view people by their race and ethnicity over their skill and capabilities.</p>
 
-  <p>This issue is important to address because it treats minority groups unfairly, preventing them from being able to earn money and move up social classes. In addition, this increases the social wealth gap seen within America today, making it harder for people of color to earn income and support their own lives. The issue of AI bias within hiring systems demonstrates how America is not always the "land of opportunity". Today, many people view America as the technology hub, holding rapid growth in new inventions and AI advancements. However, new technology like AI hiring systems that judge applicants based on their race has reversed progress and proven that improvements still need to be made.</p>
+  <p>This issue is important to address because it treats people of color unfairly, preventing them from being able to earn money and move up social classes. Furthermore, this increases the social wealth gap seen in America, making it harder for people of color to earn a steady source of income and support their lives. The issue of AI bias within hiring systems demonstrates how America is not always the "land of opportunity". Today, many people view America as the technology hub, holding rapid growth in new inventions and AI advancements. However, new technology like AI hiring systems that judge applicants based on their race has reversed progress and proven that improvements still need to be made.</p>
 
-  <p>America cannot be called the land of opportunity if people of equal talent and qualifications are being denied jobs by biased AI hiring systems due to their race. With the rapidly growing economy and increasing inflation rates, jobs are becoming the main sources of income, stability, and support for people's lives and families. If people of color are being discriminated against by AI hiring systems, they can be denied not only a job position, but also the freedom to live a lifelong journey of financial stability, professional skill development, and career growth.</p>
+  <p>America cannot be called the land of opportunity if people of equal talent and qualifications are being denied jobs because of their race. With the rapidly growing economy and increasing inflation rates in America, jobs are becoming the main source of income, stability, and support for people's lives and families. If people of color are being discriminated against by AI hiring systems, they can be denied not only a job position, but also the freedom to live a lifelong journey of financial stability, professional skill development, and career growth.</p>
 
-  <p>The idea that America is a land of opportunity originates from the common belief that hard work and effort can achieve success and wellbeing. However, in America, AI hiring systems are rejecting qualified minority applicants who have dedicated countless hours of hard work before they are able to prove themselves worthy. This suggests that success in America is influenced not by effort and skill, but rather by racial inequality and injustice. In order for America to become the "land of opportunity", it would first have to improve its new technology, removing past patterns of discrimination and ensuring that everyone gets the same chance regardless of their race and ethnicity.</p>
+  <p>The idea of America as a land of opportunity originates from the common belief that hard work and effort can achieve success and wellbeing. However, in America, AI hiring systems are rejecting qualified colored applicants who have dedicated countless hours of hard work before they are able to prove themselves worthy. This suggests that success in America is influenced not by effort and skill, but by racial inequality and injustice. In order for America to become the "land of opportunity", it first has to improve its current technology, removing past patterns of discrimination so everyone gets the same chance regardless of their race or ethnicity.</p>
 </section>
 
 <!-- ============== FOOTNOTES ============== -->
@@ -277,7 +400,7 @@
 </section>
 
 <footer>
-  <p>© 2026 Leon Zhao · Built with HTML, CSS, JavaScript &amp; Chart.js.</p>
+  <p>© 2026 Leon Zhao · Humanities 11 · Built with HTML, CSS, JavaScript &amp; Chart.js.</p>
   <p>Machine-learning analysis trained on the OpenIntro <em>labor_market_discrimination</em> dataset (Bertrand &amp; Mullainathan, 2004).</p>
 </footer>
 
