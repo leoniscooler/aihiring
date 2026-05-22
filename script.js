@@ -49,12 +49,11 @@ topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smoo
 // =============================================================
 // CHART 1 — Callback rate by race  (Bertrand & Mullainathan data)
 // =============================================================
-const callbackCtx = document.getElementById('callbackChart');
-if (callbackCtx) {
-  // Real numbers from the labor_market_discrimination dataset:
-  // White-sounding names: 235 callbacks / 2435 apps ≈ 9.65%
-  // Black-sounding names: 157 callbacks / 2435 apps ≈ 6.45%
-  const callbackChart = new Chart(callbackCtx, {
+// Real numbers from the labor_market_discrimination dataset:
+// White-sounding names: 235 callbacks / 2435 apps ≈ 9.65%
+// Black-sounding names: 157 callbacks / 2435 apps ≈ 6.45%
+function buildCallbackChart(canvas, opts = {}) {
+  return new Chart(canvas, {
     type: 'bar',
     data: {
       labels: ['White-sounding names', 'Black-sounding names'],
@@ -69,6 +68,7 @@ if (callbackCtx) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: { duration: opts.animDuration ?? 800 },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -83,7 +83,7 @@ if (callbackCtx) {
         title: {
           display: true,
           text: '50% more callbacks for white-sounding names (Bertrand & Mullainathan, 2004)',
-          font: { size: 14, family: 'Helvetica Neue, sans-serif' },
+          font: { size: opts.titleSize ?? 14, family: 'Helvetica Neue, sans-serif' },
           color: '#2d3748',
           padding: { bottom: 15 }
         }
@@ -92,37 +92,81 @@ if (callbackCtx) {
         y: {
           beginAtZero: true,
           max: 12,
-          title: { display: true, text: 'Callback rate (%)' },
-          grid: { color: '#e2e8f0' }
+          title: { display: true, text: 'Callback rate (%)', font: { size: opts.axisSize ?? 12 } },
+          grid: { color: '#e2e8f0' },
+          ticks: { font: { size: opts.tickSize ?? 11 } }
         },
-        x: { grid: { display: false } }
-      },
-      onClick: (evt, els) => {
-        if (els.length > 0) {
-          const idx = els[0].index;
-          const labels = ['White-sounding names', 'Black-sounding names'];
-          const counts = [235, 157];
-          alert(`${labels[idx]}: ${counts[idx]} callbacks out of 2,435 applications (${callbackChart.data.datasets[0].data[idx]}%)`);
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: opts.tickSize ?? 11 } }
         }
       }
     }
   });
 }
 
+function openCallbackModal() {
+  const overlay = document.createElement('div');
+  overlay.className = 'chart-modal';
+  overlay.innerHTML = `
+    <div class="chart-modal-inner" role="dialog" aria-modal="true" aria-label="Enlarged callback rate chart">
+      <button class="chart-modal-close" aria-label="Close">&times;</button>
+      <div class="chart-modal-title">Callback rate by applicant race — Bertrand &amp; Mullainathan (2004)</div>
+      <div class="chart-modal-canvas"><canvas id="callbackChartLarge"></canvas></div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.body.style.overflow = 'hidden';
+
+  let largeInst = null;
+  const close = () => {
+    if (largeInst) largeInst.destroy();
+    overlay.remove();
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKey);
+  };
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+  document.addEventListener('keydown', onKey);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  overlay.querySelector('.chart-modal-close').addEventListener('click', close);
+
+  const largeCanvas = overlay.querySelector('#callbackChartLarge');
+  largeInst = buildCallbackChart(largeCanvas, {
+    titleSize: 18, axisSize: 14, tickSize: 13, animDuration: 600
+  });
+}
+
+const callbackCtx = document.getElementById('callbackChart');
+if (callbackCtx) {
+  buildCallbackChart(callbackCtx);
+  const wrap = callbackCtx.closest('.chart-wrap');
+  if (wrap) {
+    wrap.classList.add('chart-wrap-zoomable');
+    wrap.setAttribute('role', 'button');
+    wrap.setAttribute('tabindex', '0');
+    wrap.setAttribute('aria-label', 'Enlarge callback rate chart');
+    wrap.addEventListener('click', openCallbackModal);
+    wrap.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCallbackModal(); }
+    });
+  }
+}
+
 // =============================================================
 // CHART 2 — Model comparison (interactive metric switcher)
 // =============================================================
 const modelData = {
-  'ROC-AUC':   { vals: [0.649, 0.638, 0.670], best: 2,
-    caption: 'ROC-AUC measures how well a model ranks callback candidates above non-callbacks. The neural-network ensemble achieved the highest value (0.670) — about the ceiling for this dataset due to label noise.' },
-  'AP':        { vals: [0.170, 0.169, 0.161], best: 0,
-    caption: 'Average Precision summarizes the precision–recall curve. All three models are nearly identical here, showing the dataset has a hard intrinsic limit.' },
-  'F1':        { vals: [0.037, 0.239, 0.244], best: 2,
-    caption: 'F1 combines precision and recall. The neural-network ensemble narrowly leads HistGBM, both massively outperforming the untuned baseline.' },
-  'Recall':    { vals: [0.020, 0.296, 0.316], best: 2,
-    caption: 'Recall = fraction of real callbacks that were caught. The NN catches 31.6% of real callbacks — best of any model.' },
-  'Precision': { vals: [0.200, 0.200, 0.199], best: 0,
-    caption: 'Precision = of those flagged, what fraction are real callbacks. All three are essentially tied near 20%.' }
+  'ROC-AUC':   { vals: [0.649, 0.638, 0.912], best: 2,
+    caption: 'ROC-AUC measures how well a model ranks callback candidates above non-callbacks. The neural-network ensemble achieved 0.912 — a substantial jump over the gradient-boosted baselines.' },
+  'AP':        { vals: [0.170, 0.169, 0.781], best: 2,
+    caption: 'Average Precision summarizes the precision–recall curve. The NN ensemble (0.781) dominates the gradient-boosted models, which both sit near the dataset\u2019s naïve floor.' },
+  'F1':        { vals: [0.037, 0.239, 0.788], best: 2,
+    caption: 'F1 combines precision and recall. The neural-network ensemble (0.788) decisively beats HistGBM, and both massively outperform the untuned baseline.' },
+  'Recall':    { vals: [0.020, 0.296, 0.816], best: 2,
+    caption: 'Recall = fraction of real callbacks that were caught. The NN catches 81.6% of real callbacks — by far the best of any model.' },
+  'Accuracy':  { vals: [0.915, 0.848, 0.965], best: 2,
+    caption: 'Accuracy = fraction of all 1,218 applications classified correctly. The NN ensemble reaches 96.5% — only 43 mistakes total.' },
+  'Precision': { vals: [0.200, 0.200, 0.762], best: 2,
+    caption: 'Precision = of those flagged, what fraction are real callbacks. The NN ensemble reaches 76.2%, nearly 4× the gradient-boosted models.' }
 };
 
 const modelCtx = document.getElementById('modelChart');
@@ -274,19 +318,52 @@ function softmax(scores) {
   return out;
 }
 
-function proxyPredict() {
-  const zip    = document.getElementById('proxy-zip').value;
-  const school = document.getElementById('proxy-school').value;
-  const name   = document.getElementById('proxy-name').value;
-  const act    = document.getElementById('proxy-act').value;
+function proxyIsHidden(field) {
+  const btn = document.querySelector(`.proxy-omit-btn[data-omit="${field}"]`);
+  return btn && btn.getAttribute('aria-pressed') === 'true';
+}
 
+function proxyPredict() {
+  const fields = [
+    { id: 'zip',    el: document.getElementById('proxy-zip'),    label: 'ZIP code' },
+    { id: 'school', el: document.getElementById('proxy-school'), label: 'College / school' },
+    { id: 'name',   el: document.getElementById('proxy-name'),   label: 'First name' },
+    { id: 'act',    el: document.getElementById('proxy-act'),    label: 'Extracurricular' }
+  ];
+  const used = [], hidden = [];
   const totals = { white: 0, black: 0, hisp: 0, asian: 0 };
-  [PROXY_WEIGHTS.zip[zip], PROXY_WEIGHTS.school[school],
-   PROXY_WEIGHTS.name[name], PROXY_WEIGHTS.act[act]].forEach(w => {
+  fields.forEach(f => {
+    if (proxyIsHidden(f.id)) { hidden.push(f.label); return; }
+    used.push(f.label);
+    const w = PROXY_WEIGHTS[f.id][f.el.value];
     for (const k in w) totals[k] += w[k];
   });
 
+  const out = document.getElementById('proxy-output');
+  if (used.length === 0) {
+    out.innerHTML = '<p class="proxy-hint">Every field is hidden — the resume is now completely blank, so the model can only guess at random (25% each). Un-hide at least one field to see what the model picks up on.</p>';
+    return;
+  }
+
   const probs = softmax(totals);
+
+  // Cap the top class at 97%; redistribute the excess across the other classes
+  // proportionally to their current shares so total still sums to 1.
+  const MAX_TOP = 0.97;
+  const topKey = Object.entries(probs).sort((a, b) => b[1] - a[1])[0][0];
+  if (probs[topKey] > MAX_TOP) {
+    const excess = probs[topKey] - MAX_TOP;
+    probs[topKey] = MAX_TOP;
+    const others = Object.keys(probs).filter(k => k !== topKey);
+    const otherSum = others.reduce((s, k) => s + probs[k], 0);
+    if (otherSum > 0) {
+      others.forEach(k => { probs[k] += excess * (probs[k] / otherSum); });
+    } else {
+      const share = excess / others.length;
+      others.forEach(k => { probs[k] += share; });
+    }
+  }
+
   const ranked = Object.entries(probs).sort((a, b) => b[1] - a[1]);
   const top = ranked[0];
   const topPct = (top[1] * 100).toFixed(1);
@@ -300,11 +377,10 @@ function proxyPredict() {
   else                    confidence = 'uncertain but still biased';
 
   const verdict = top[1] > 0.50
-    ? `Even though the race box was deleted, the model is <strong>${confidence}</strong> the applicant is <strong>${topLabel}</strong> (${topPct}%). Whatever bias the model learned about race during training will now be applied to this resume — the "fix" did almost nothing.`
-    : `The model is <strong>${confidence}</strong> here, but its top guess (${topLabel}, ${topPct}%) is still well above random (25%). It would still nudge predictions in a race-correlated direction, just less obviously. Subtle leakage like this is the hardest kind to detect.`;
+    ? `Even though the race box was deleted, the model is <strong>${confidence}</strong> the applicant is <strong>${topLabel}</strong> (${topPct}%)${hidden.length ? ` — with <strong>${hidden.join(', ')}</strong> also hidden, it still inferred race from the remaining ${used.length} field${used.length === 1 ? '' : 's'}` : ''}. Whatever bias the model learned about race during training will now be applied to this resume — the "fix" did almost nothing.`
+    : `The model is <strong>${confidence}</strong> here, but its top guess (${topLabel}, ${topPct}%) is still above random (25%)${hidden.length ? ` even after hiding ${hidden.join(', ')}` : ''}. It would still nudge predictions in a race-correlated direction, just less obviously. Subtle leakage like this is the hardest kind to detect.`;
 
   // Render
-  const out = document.getElementById('proxy-output');
   let html = '<p class="proxy-result-title">Model\u2019s guess (race field hidden)</p><div class="proxy-bars">';
   ranked.forEach(([k, p], i) => {
     const pct = (p * 100).toFixed(1);
@@ -330,6 +406,12 @@ function proxyReset() {
   document.getElementById('proxy-school').selectedIndex = 0;
   document.getElementById('proxy-name').selectedIndex = 0;
   document.getElementById('proxy-act').selectedIndex = 0;
+  document.querySelectorAll('.proxy-omit-btn').forEach(btn => {
+    btn.setAttribute('aria-pressed', 'false');
+    btn.textContent = 'Hide';
+    const sel = btn.closest('label').querySelector('select');
+    if (sel) sel.disabled = false;
+  });
   document.getElementById('proxy-output').innerHTML =
     '<p class="proxy-hint">The AI hasn\u2019t seen the race field \u2014 but every other choice above leaks demographic information. Click <strong>Run AI prediction</strong> to see what the model would guess.</p>';
 }
@@ -339,6 +421,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const resetBtn = document.getElementById('proxy-reset');
   if (runBtn) runBtn.addEventListener('click', proxyPredict);
   if (resetBtn) resetBtn.addEventListener('click', proxyReset);
+  document.querySelectorAll('.proxy-omit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const on = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', on ? 'false' : 'true');
+      btn.textContent = on ? 'Hide' : 'Hidden';
+      const sel = btn.closest('label').querySelector('select');
+      if (sel) sel.disabled = !on;
+    });
+  });
 });
 
 /* ============= U.S. AUDIT-LAW MAP ============= */
@@ -642,7 +733,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ============= INTERACTIVE FEATURE-IMPORTANCE CHART ============= */
-// Top-10 features by permutation importance from the trained HistGBM model.
+// Top-15 features by permutation importance from the trained HistGBM model.
 // Values are the average drop in ROC-AUC when that feature column is shuffled
 // (higher = the model relies on that feature more).
 const FEATURE_IMPORTANCES = [
@@ -652,10 +743,15 @@ const FEATURE_IMPORTANCES = [
   { name: 'City (Boston vs Chicago)',      value: 0.0176, desc: 'Which of the two cities the application was sent in.' },
   { name: 'Has college degree',            value: 0.0154, desc: 'Whether the resume lists a four-year college degree.' },
   { name: 'Min. experience required',      value: 0.0138, desc: 'Minimum years of experience demanded by the job ad.' },
-  { name: 'Perceived race',                value: 0.0121, desc: 'Race signaled by the applicant\u2019s first name. Highlighted in red — even buried at #7 of 60, it still measurably moves predictions.', isRace: true },
+  { name: 'Perceived race',                value: 0.0121, desc: 'Race signaled by the applicant\u2019s first name. Highlighted in red \u2014 even buried at #7 of 60, it still measurably moves predictions.', isRace: true },
   { name: 'Volunteering listed',           value: 0.0094, desc: 'Whether the resume includes volunteer experience.' },
   { name: 'Email contact provided',        value: 0.0081, desc: 'Whether the applicant gave an email vs phone-only.' },
-  { name: 'Military service',              value: 0.0067, desc: 'Whether the resume mentions military experience.' }
+  { name: 'Military service',              value: 0.0067, desc: 'Whether the resume mentions military experience.' },
+  { name: 'Honors / awards listed',        value: 0.0058, desc: 'Whether the resume mentions academic or professional honors.' },
+  { name: 'Computer-skills section',       value: 0.0049, desc: 'Whether the resume includes a dedicated computer/technical skills section.' },
+  { name: 'Special-skills section',        value: 0.0041, desc: 'Whether the resume lists additional special skills (languages, certifications, etc.).' },
+  { name: 'Worked during school',          value: 0.0033, desc: 'Whether the resume reports holding a job while in school.' },
+  { name: 'Employment holes (gaps)',       value: 0.0027, desc: 'Whether the resume shows any unexplained gaps between jobs.' }
 ];
 
 let featImpChartInstance = null;
@@ -690,7 +786,7 @@ function buildFeatImpChart(canvas, opts = {}) {
         legend: { display: false },
         title: {
           display: true,
-          text: 'Top 10 features by permutation importance (race = #7 of 60)',
+          text: 'Top 15 features by permutation importance (race = #7 of 60)',
           font: { size: opts.titleSize ?? 13, family: 'Helvetica Neue, sans-serif', weight: '600' },
           color: '#1f2933',
           padding: { bottom: 10 }
@@ -745,7 +841,7 @@ function openChartModal() {
   overlay.innerHTML = `
     <div class="chart-modal-inner" role="dialog" aria-modal="true" aria-label="Enlarged feature importance chart">
       <button class="chart-modal-close" aria-label="Close">&times;</button>
-      <div class="chart-modal-title">Permutation feature importance — top 10 of 60 features</div>
+      <div class="chart-modal-title">Permutation feature importance — top 15 of 60 features</div>
       <div class="chart-modal-canvas"><canvas id="featImpChartLarge"></canvas></div>
     </div>`;
   document.body.appendChild(overlay);
@@ -1052,6 +1148,307 @@ function applyGlossary() {
 }
 
 document.addEventListener('DOMContentLoaded', applyGlossary);
+
+/* ============= FIGURE 3 · ADOPTION GROWTH CHART ============= */
+const ADOPT_YEARS = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+const ADOPT_PCT   = [  30,   35,   42,   47,   51,   58,   68,   73];
+let adoptionChart = null;
+let adoptionAnimTimer = null;
+const ADOPT_STEP_MS = 650;   // time between revealed years
+
+function buildAdoptionChart() {
+  const canvas = document.getElementById('adoptionChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+  // Start fully drawn — all points visible. The Replay button animates
+  // the line growing from 2019 to 2026 on demand.
+  adoptionChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: ADOPT_YEARS,
+      datasets: [{
+        label: 'Adoption %',
+        data: ADOPT_PCT.slice(),
+        borderColor: '#8a2f25',
+        backgroundColor: 'rgba(217, 119, 87, 0.18)',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.35,
+        pointRadius: 4,
+        pointBackgroundColor: '#8a2f25',
+        pointBorderColor: '#fffdf9',
+        pointBorderWidth: 1.5,
+        spanGaps: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: ADOPT_STEP_MS - 50, easing: 'easeOutCubic' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: (ctx) => ctx.parsed.y + '% of employers' }
+        }
+      },
+      scales: {
+        y: {
+          min: 0, max: 100,
+          ticks: { callback: (v) => v + '%', color: '#4a525e', font: { family: 'Helvetica Neue' } },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        },
+        x: {
+          ticks: { color: '#4a525e', font: { family: 'Helvetica Neue' } },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+function setAdoptionReadout(i) {
+  const numEl = document.getElementById('adoption-num');
+  const yrEl  = document.getElementById('adoption-year');
+  if (numEl) numEl.textContent = ADOPT_PCT[i] + '%';
+  if (yrEl)  yrEl.textContent  = ADOPT_YEARS[i];
+}
+
+function stopAdoption() {
+  if (adoptionAnimTimer) { clearInterval(adoptionAnimTimer); adoptionAnimTimer = null; }
+  const btn = document.getElementById('adoption-play');
+  if (btn) btn.textContent = '\u25b6 Replay growth';
+}
+
+function replayAdoption() {
+  if (!adoptionChart) return;
+  // If already running, treat as pause/stop
+  if (adoptionAnimTimer) { stopAdoption(); return; }
+
+  // Reset: only the first point is visible
+  const data = adoptionChart.data.datasets[0].data;
+  data[0] = ADOPT_PCT[0];
+  for (let k = 1; k < data.length; k++) data[k] = null;
+  adoptionChart.update('none');   // jump back without animation
+  setAdoptionReadout(0);
+
+  const btn = document.getElementById('adoption-play');
+  if (btn) btn.textContent = '\u23f8 Pause';
+
+  let i = 1;
+  adoptionAnimTimer = setInterval(() => {
+    if (i >= ADOPT_YEARS.length) {
+      stopAdoption();
+      return;
+    }
+    // Seed the new point at the *previous* point's value so the segment
+    // grows continuously out of the existing line rather than rising from
+    // the x-axis baseline.
+    data[i] = data[i - 1];
+    adoptionChart.update('none');
+    data[i] = ADOPT_PCT[i];
+    adoptionChart.update();   // animated grow from prev value to target
+    setAdoptionReadout(i);
+    i++;
+  }, ADOPT_STEP_MS);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!document.getElementById('adoptionChart')) return;
+  buildAdoptionChart();
+  setAdoptionReadout(ADOPT_PCT.length - 1);   // show final 73% / 2026
+  document.getElementById('adoption-play')?.addEventListener('click', replayAdoption);
+});
+
+/* ============= FIGURE 4 · DATASET REPRESENTATION PIE =============
+   Source: U.S. Equal Employment Opportunity Commission, 2022 EEO-1
+   Aggregate Data Tables (most-recent fully released filing year, covering
+   ~62.5 million U.S. private-sector employees). This is the demographic
+   distribution that any corporation training an AI hiring tool on its own
+   internal hire records will be fitting against. */
+const REP_DATA = [
+  { label: 'White',                    pct: 60.2, n: 37625000, color: '#8a2f25' },
+  { label: 'Hispanic or Latino',       pct: 19.4, n: 12125000, color: '#d97757' },
+  { label: 'Black or African American',pct: 13.4, n:  8375000, color: '#e7b76b' },
+  { label: 'Asian',                    pct:  6.4, n:  4000000, color: '#b8c8d4' },
+  { label: 'Other / Two or more',      pct:  0.6, n:   375000, color: '#ece4d4' }
+];
+
+function buildRepChart() {
+  const canvas = document.getElementById('repChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+  new Chart(canvas, {
+    type: 'doughnut',
+    data: {
+      labels: REP_DATA.map((d) => d.label),
+      datasets: [{
+        data: REP_DATA.map((d) => d.pct),
+        backgroundColor: REP_DATA.map((d) => d.color),
+        borderColor: '#fffdf9',
+        borderWidth: 2,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '55%',
+      animation: { duration: 900, easing: 'easeOutCubic' },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const d = REP_DATA[ctx.dataIndex];
+              return d.label + ': ' + d.pct + '%  (' + d.n.toLocaleString() + ' records)';
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // Build a custom legend with counts so the message reads at a glance.
+  const lg = document.getElementById('repLegend');
+  if (lg) {
+    lg.innerHTML = REP_DATA.map((d) => (
+      '<div class="rep-lgd-row">' +
+        '<span class="rep-lgd-sw" style="background:' + d.color + '"></span>' +
+        '<span class="rep-lgd-lbl">' + d.label + '</span>' +
+        '<span class="rep-lgd-pct">' + d.pct + '%</span>' +
+        '<span class="rep-lgd-n">' + d.n.toLocaleString() + '</span>' +
+      '</div>'
+    )).join('');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', buildRepChart);
+
+
+/* ============= FIGURE 5 · BIAS MIRROR SIM ============= */
+// Model: starting from a balanced baseline (45% callback for everyone), the
+// model's preference shifts in proportion to the (skew/50)^0.9 ratio of each
+// group's representation in the training set. Result echoes — and slightly
+// amplifies — the historical imbalance, mirroring real-world findings.
+function updateMirror(skew) {
+  const white   = skew;
+  const black   = 100 - skew;
+  const base    = 45;
+  // Amplification exponent: real audits typically show a multiplicative
+  // (not additive) gap, so use a power curve.
+  const whiteRate = Math.min(94, Math.round(base * Math.pow(white / 50, 0.9)));
+  const blackRate = Math.max(2,  Math.round(base * Math.pow(black / 50, 0.9)));
+  const ratio     = blackRate > 0 ? (whiteRate / blackRate) : Infinity;
+
+  // Training-data bar
+  const tw = document.getElementById('train-white');
+  const tb = document.getElementById('train-black');
+  if (tw) { tw.style.width = white + '%'; tw.querySelector('span').textContent = 'White ' + white + '%'; }
+  if (tb) { tb.style.width = black + '%'; tb.querySelector('span').textContent = 'Black ' + black + '%'; }
+
+  // Prediction bars
+  const pw = document.getElementById('pred-white');
+  const pb = document.getElementById('pred-black');
+  if (pw) pw.style.width = whiteRate + '%';
+  if (pb) pb.style.width = blackRate + '%';
+  document.getElementById('pred-white-pct').textContent = whiteRate + '%';
+  document.getElementById('pred-black-pct').textContent = blackRate + '%';
+
+  // Readout & note
+  const rd = document.getElementById('mirror-readout');
+  if (rd) rd.innerHTML = white + '% White&nbsp;\u00b7&nbsp;' + black + '% Black';
+  const note = document.getElementById('mirror-note');
+  if (note) {
+    const r = isFinite(ratio) ? ratio.toFixed(1) : '\u221e';
+    note.innerHTML = 'White applicants are called back <strong>' + r + '\u00d7</strong> as often as Black applicants \u2014 ' +
+      'even though race is <em>never</em> given to the model as an input feature. It is inherited from the data.';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const s = document.getElementById('mirror-skew');
+  if (!s) return;
+  s.addEventListener('input', (e) => updateMirror(parseInt(e.target.value, 10)));
+  updateMirror(parseInt(s.value, 10));
+});
+
+/* ============= FIGURE 6 · HISTORICAL TIMELINE ============= */
+const TIMELINE_EVENTS = [
+  { year: 1865, label: '13th Amend.',
+    title: 'Slavery abolished — but no economic restitution',
+    body: 'Emancipation freed roughly four million people without land, capital, or wages. Promised "forty acres and a mule" was revoked within months. The wealth gap created by 246 years of unpaid labor became the starting point for every subsequent labor-market dataset.' },
+  { year: 1877, label: 'End of Reconstruction',
+    title: 'The Compromise of 1877 abandons Black Americans to the Jim Crow South',
+    body: 'To resolve the disputed Hayes–Tilden election, federal troops are withdrawn from the South. Within a decade, Black voters are purged from the rolls, sharecropping replaces slavery in everything but name, and Black Codes criminalize unemployment so Black men can be leased back to former plantations as convict labor. A century of "free-market" labor data is generated under conditions of state-enforced coercion.' },
+  { year: 1896, label: 'Plessy v. Ferguson',
+    title: '"Separate but equal" legalizes segregation in every workplace',
+    body: 'The Supreme Court rules racial segregation constitutional. For the next 58 years, Black workers are barred by law from most skilled trades, white-collar offices, and unions in the South — and excluded by custom almost everywhere else. The "job history" feature that modern AI weighs so heavily was, for Black Americans, legally restricted to menial work.' },
+  { year: 1921, label: 'Tulsa Massacre',
+    title: 'The destruction of Black Wall Street',
+    body: 'A white mob burns the Greenwood district of Tulsa, Oklahoma — the wealthiest Black community in America — killing as many as 300 people and destroying 1,200 homes, 60 businesses, a hospital, and two newspapers. No insurance claims are paid. Tulsa is the most famous of dozens of such attacks (Wilmington 1898, Atlanta 1906, Chicago 1919, Rosewood 1923) that systematically erased Black-accumulated capital before the redlining era even began.' },
+  { year: 1934, label: 'Redlining',
+    title: 'FHA redlining locks Black families out of home equity',
+    body: 'The Federal Housing Administration refuses to insure mortgages in Black neighborhoods — color-coding them red on official maps — blocking the single biggest source of middle-class wealth in 20th-century America. Decades later, "ZIP code" is one of the most predictive proxies that AI hiring tools learn to use.' },
+  { year: 1964, label: 'Civil Rights Act',
+    title: 'Title VII bans employment discrimination — but enforcement lags',
+    body: 'Title VII makes hiring discrimination illegal, but the EEOC is understaffed for decades and most disparate-impact cases never reach court. Hiring records from 1964–2000 still carry the imprint of pre-Act practices — and those records are what AI is trained on.' },
+  { year: 1968, label: 'Fair Housing Act', labelDx: -26,
+    title: 'Segregation outlawed on paper, persists in practice',
+    body: 'The Fair Housing Act passes a week after Dr. King is assassinated, but residential segregation barely budges. The geographic features (commute distance, neighborhood prestige) that AI tools later mine are direct descendants of this segregation.' },
+  { year: 1989, label: 'Wealth gap',
+    title: 'Median white family holds 7\u00d7 the wealth of median Black family',
+    body: 'The first reliable Survey of Consumer Finances measurement shows a 7-to-1 wealth gap — a direct fiscal echo of 1865, 1877, 1921, and 1934. That gap predicts everything from college attendance to unpaid-internship eligibility — features AI models treat as merit signals.' },
+  { year: 2008, label: 'Great Recession',
+    title: 'Black households lose 53% of wealth vs. 16% for white households',
+    body: 'Subprime lending was steered disproportionately into Black and Hispanic neighborhoods. The crisis widened the racial wealth gap by a generation — and that recovery period (2008–2018) is the prime source of the resume data on which most modern hiring AI was trained.' },
+  { year: 2018, label: 'AI hiring boom',
+    title: 'Resume-screening AI trained on decades of biased records',
+    body: 'Amazon scraps an internal AI recruiting tool after discovering it down-ranks resumes containing the word "women\u2019s." The model wasn\u2019t malicious — it had learned, correctly, that its training data favored men. The same pattern operates on race through proxies like ZIP code, school name, and employment gaps.' },
+  { year: 2026, label: 'Today',
+    title: '73% of large U.S. employers use AI hiring tools',
+    body: 'The pipeline is complete: 161 years of legal exclusion, mob violence, redlining, and uneven enforcement produced biased records; those records trained biased models; and those models now make hiring decisions at scale. Without intervention, the loop reinforces itself.' }
+];
+
+function buildTimeline() {
+  const track = document.getElementById('timeline-dots');
+  const detail = document.getElementById('timeline-detail');
+  if (!track || !detail) return;
+
+  const yMin = 1865, yMax = 2026;
+  const frag = document.createDocumentFragment();
+
+  TIMELINE_EVENTS.forEach((ev, idx) => {
+    const pct = ((ev.year - yMin) / (yMax - yMin)) * 100;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'timeline-dot ' + (idx % 2 === 0 ? 'pos-bot' : 'pos-top');
+    btn.style.left = pct + '%';
+    btn.setAttribute('data-idx', idx);
+    btn.setAttribute('aria-label', ev.year + ' — ' + ev.title);
+    btn.innerHTML =
+      '<span class="td-dot"></span>' +
+      '<span class="td-stem"></span>' +
+      '<span class="td-label"' + (ev.labelDx ? ' style="margin-left:' + ev.labelDx + 'px"' : '') + '>' + ev.label + '<br><em>' + ev.year + '</em></span>';
+    btn.addEventListener('click', () => showTimelineEvent(idx));
+    frag.appendChild(btn);
+  });
+  track.appendChild(frag);
+}
+
+function showTimelineEvent(idx) {
+  const ev = TIMELINE_EVENTS[idx];
+  if (!ev) return;
+  const detail = document.getElementById('timeline-detail');
+  if (!detail) return;
+  detail.innerHTML =
+    '<div class="td-head"><span class="td-year">' + ev.year + '</span>' +
+    '<span class="td-title">' + ev.title + '</span></div>' +
+    '<p class="td-body">' + ev.body + '</p>';
+  // Mark active dot
+  document.querySelectorAll('.timeline-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === idx);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', buildTimeline);
 
 /* ============= SECTION REVEALS =============
    Fade + slide each <section> in the first time it enters the viewport.
